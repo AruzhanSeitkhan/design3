@@ -26,38 +26,184 @@ assign_3_input.json — contains graphs for testing.
 
 assign_3_output.json — contains the MST results.
 
-### How It Works
 
-1. The program reads the input file assign_3_input.json.
-2. For each graph, it loads nodes and edges.
-3. It runs both Prim’s and Kruskal’s algorithms to find the MST.
-4. For each algorithm, it records the following:
-   
-   4.1 MST edges
+### Algorithm Implementations
 
-   4.2 Total MST cost
+#### Prim’s Algorithm
 
-   4.3 Number of operations
+Builds MST starting from one node.
 
-   4.3 Execution time in milliseconds
+Uses a priority queue to pick the smallest edge leading to an unvisited vertex.
 
-   4.5 It writes all results into assign_3_output.json.
+Tracks operations and execution time.
 
-### Algorithm Descriptions
+#### Kruskal’s Algorithm
 
-Prim’s Algorithm:
+Sorts all edges by weight.
 
-Starts with one vertex and repeatedly adds the smallest edge that connects a visited vertex to an unvisited vertex. Works well on dense graphs.
+Uses a Union-Find (Disjoint Set) structure to avoid cycles.
 
-Kruskal’s Algorithm:
+Selects edges connecting different components until MST has V - 1 edges.
 
-Sorts all edges by weight and adds them one by one, avoiding cycles using a Union-Find structure. Works well on sparse graphs.
+#### Both algorithms record:
+
+mst_edges
+
+total_cost
+
+operations_count
+
+execution_time_ms
+
+### Input Dataset Example (assign_3_input.json)
+
+{
+
+  "graphs": [
+  
+    {
+    
+      "id": 1,
+      
+      "nodes": ["A", "B", "C", "D", "E"],
+      
+      "edges": [
+      
+        {"from": "A", "to": "B", "weight": 3},
+        
+        {"from": "A", "to": "C", "weight": 5},
+        
+        {"from": "B", "to": "C", "weight": 2},
+        
+        {"from": "B", "to": "D", "weight": 6},
+        
+        {"from": "C", "to": "E", "weight": 4},
+        
+        {"from": "D", "to": "E", "weight": 7}
+        
+      ]
+      
+    },
+    
+    {
+      "id": 2,
+      
+      "nodes": ["P", "Q", "R", "S", "T"],
+      
+      "edges": [
+      
+        {"from": "P", "to": "Q", "weight": 1},
+        
+        {"from": "P", "to": "R", "weight": 5},
+        
+        {"from": "Q", "to": "R", "weight": 2},
+        
+        {"from": "Q", "to": "S", "weight": 3},
+        
+        {"from": "R", "to": "T", "weight": 4},
+        
+        {"from": "S", "to": "T", "weight": 6}
+        
+      ]
+      
+    }
+    
+  ]
+  
+}
+
+### Output Example (assign_3_output.json)
+
+{
+  "results": [
+  
+    {
+      "graph_id": 1,
+      
+      "input_stats": {"vertices": 5, "edges": 6},
+      
+      "prim": {
+      
+        "total_cost": 15,
+        
+        "operations_count": 21,
+        
+        "execution_time_ms": 3
+        
+      },
+      
+      "kruskal": {
+      
+        "total_cost": 15,
+        
+        "operations_count": 11,
+        
+        "execution_time_ms": 42
+        
+      }
+      
+    },
+    
+    {
+      "graph_id": 2,
+      
+      "input_stats": {"vertices": 5, "edges": 6},
+      
+      "prim": {
+      
+        "total_cost": 10,
+        
+        "operations_count": 19,
+        
+        "execution_time_ms": 0
+        
+      },
+      
+      "kruskal": {
+      
+        "total_cost": 10,
+        
+        "operations_count": 10,
+        
+        "execution_time_ms": 0
+        
+      }
+      
+    }
+    
+  ]
+  
+}
+
+### Result Analysis
+
+For Graph 1 , both algorithms produced the same Minimum Spanning Tree (MST) cost of 15.
+
+Prim’s algorithm performed 21 operations and completed in 3 milliseconds.
+
+Kruskal’s algorithm also achieved an MST cost of 15, but it required only 11 operations and took 42 milliseconds to execute.
+
+For Graph 2, both algorithms again produced identical MST costs of 10.
+
+Prim’s algorithm needed 19 operations and executed almost instantly (0 milliseconds).
+
+Kruskal’s algorithm reached the same cost with 10 operations and also executed in 0 milliseconds.
+
+### Testing Summary
+
+Verified MST correctness (total_cost, V−1 edges, acyclic, connected).
+
+Checked operation counts and timing for reproducibility.
+
+Input/output fully automated with JSON.
+
+Both algorithms passed all correctness tests.
 
 ### Conclusion
 
-Kruskal’s algorithm is generally faster for sparse graphs (with fewer edges) because it sorts edges once and uses the Union-Find structure efficiently.
+Both Prim’s and Kruskal’s algorithms produced identical MST costs, confirming their correctness. While the tree structure may differ, the total cost remains the same.
 
-Prim’s algorithm performs better for dense graphs (with many edges) since it focuses on connecting vertices through the smallest edge at each step.
+Prim’s algorithm works better for dense graphs, as it efficiently handles many connected edges using a priority queue.
+Kruskal’s algorithm performs faster on sparse graphs, thanks to its simple edge-sorting and Union-Find approach.
 
-Overall, both algorithms demonstrate the principles of greedy optimization, but Kruskal’s algorithm is slightly more efficient in terms of operations and execution time in most test cases.
-The project clearly illustrates how algorithm design choices affect performance and complexity.
+For large real-world networks, especially those with fewer connections, Kruskal’s is typically more practical, whereas Prim’s is better suited for dense or adjacency-based graphs. Both algorithms are reliable and efficient, with performance depending on the graph’s structure.
